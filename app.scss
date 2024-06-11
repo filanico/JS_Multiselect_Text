@@ -16,6 +16,9 @@
     background-color: #efefef;
     width: 100%;
     z-index: 1;
+    &.show{
+      margin-top: 30px;
+    }
     li {
       list-style: none;
       padding: 3px;
