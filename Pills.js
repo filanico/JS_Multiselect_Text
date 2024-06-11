@@ -5,18 +5,24 @@ function Pills(cssSelector, config) {
   this.hide = function (list) {
     list.classList.remove("show");
     list.classList.add("hidden");
+    this.trigger('Pill_onListHide',{list})
   };
   this.show = function (list) {
     list.classList.remove("hidden");
     list.classList.add("show");
+    this.trigger('Pill_onListShow',{list})
   };
   this.setAttributes = (node, attrs) => {
     Object.keys(attrs).forEach((k) => {
       node.setAttribute(k, attrs[k]);
     });
   };
+  this.trigger = (eventName,data) => {
+    const ce = new CustomEvent(eventName,{detail:data});
+    document.dispatchEvent(ce);
+  }
   // events
-  this.onItemClick = function (node, input) {
+  this.onItemClick = function (node, input, root) {
     const list = node.parentNode;
     this.hide(list);
     input.value = "";
@@ -27,10 +33,14 @@ function Pills(cssSelector, config) {
     setAttributes(times,{class:'times'})
     pill.append(times);
     pill.classList.add("pill");
+    pill.addEventListener('click',function(){
+      this.trigger('Pill_onSelectedItemClick',{pill,root})
+    }.bind(this))
     node.parentNode.parentNode.append(pill);
+    this.trigger('Pill_onListItemClick',{pill,root})
   }.bind(this);
 
-  this.setEntries = function (entries, list, input) {
+  this.setEntries = function (entries, list, input,root) {
     list.innerHTML = "";
     entries.forEach(
       function (entry) {
@@ -38,7 +48,7 @@ function Pills(cssSelector, config) {
         node.addEventListener(
           "click",
           function () {
-            this.onItemClick(node, input);
+            this.onItemClick(node, input, root);
           }.bind(this)
         );
         node.innerText = entry;
@@ -47,7 +57,7 @@ function Pills(cssSelector, config) {
     );
   }.bind(this);
   const entries = config.entries || [];
-  const nodes = [...document.querySelectorAll(cssSelector)].forEach((root) => {
+  [...document.querySelectorAll(cssSelector)].forEach((root) => {
     const input = document.createElement("input");
     this.setAttributes(input, {
       type: 'text',
@@ -63,10 +73,12 @@ function Pills(cssSelector, config) {
         if (e.target.value.trim() !== "") {
           timer = setTimeout(
             function () {
+              this.trigger('Pill_onSearch',{root})
               this.setEntries(
                 entries.filter((entry) => entry.includes(e.target.value)),
                 list,
-                input
+                input,
+                root
               );
               list.classList.remove("hidden");
               list.classList.add("show");

@@ -14,6 +14,10 @@
           showResultsAfterMsecs: 400,
         });
       };
+      document.addEventListener('Pill_onSelectedItemClick',(e)=>{
+        console.log('Pill_onSelectedItemClick',e);
+        e.detail.pill.remove();
+      })
     </script>
   </head>
   <body>
