@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet/less" type="text/css" href="/app.scss" />
+    <script src="https://cdn.jsdelivr.net/npm/less@4.1.1" ></script>
+    <script src="./Pills.js"></script>
+    <script>
+      window.onload = () => {
+        Pills("[pills]", {
+          entries: ["ferro", "alluminio", "zinco", "rame", "titanio", "stagno"],
+          showResultsAfterMsecs: 400,
+        });
+      };
+    </script>
+  </head>
+  <body>
+    <div pills class="pills"></div>
+  </body>
+</html>
