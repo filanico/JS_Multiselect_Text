@@ -32,6 +32,7 @@ function Pills(cssSelector, JSconfig={}) {
           }.bind(this)
         );
         node.innerText = entry;
+        this.trigger('Pill_onBeforeAppendListItem',{entry,node});
         list.append(node);
       }.bind(this)
     );
@@ -94,8 +95,6 @@ function Pills(cssSelector, JSconfig={}) {
         }
       }.bind(this)
     );
-    // input.style.width = "100%";
-    // input.style.height = "100%";
     const list = document.createElement("ul");
     this.setAttributes(list, { class: "list hidden" });
 

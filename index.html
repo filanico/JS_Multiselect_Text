@@ -8,13 +8,23 @@
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1" ></script>
     <script src="./Pills.js"></script>
     <script>
+      const colori = {
+        ferro:'#c0c0c0',
+        zinco:'#efefef',
+        alluminio:'red'
+      }
       window.onload = () => {
         Pills("[pills]");
       };
       document.addEventListener('Pill_onSelectedItemClick',(e)=>{
-        console.log('Pill_onSelectedItemClick',e);
-        e.detail.pill.remove();
-      })
+          console.log('Pill_onSelectedItemClick',e);
+          e.detail.pill.remove();
+        })
+    document.addEventListener('Pill_onBeforeAppendListItem',(e)=>{
+        let { entry , node } = e.detail;
+        node.style.backgroundColor = colori[entry]
+        // console.log({ entry, node })
+    })
     </script>
   </head>
   <body>
