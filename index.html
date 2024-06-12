@@ -20,7 +20,7 @@
           console.log('Pill_onSelectedItemClick',e);
           e.detail.pill.remove();
         })
-    document.addEventListener('Pill_onBeforeAppendListItem',(e)=>{
+      document.addEventListener('Pill_onBeforeAppendListItem',(e)=>{
         let { entry , node } = e.detail;
         node.style.backgroundColor = colori[entry]
         // console.log({ entry, node })

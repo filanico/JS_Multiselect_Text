@@ -98,9 +98,12 @@ function Pills(cssSelector, JSconfig={}) {
     );
     const list = document.createElement("ul");
     this.setAttributes(list, { class: "list hidden" });
-
-    root.append(input);
-    root.append(list);
+    if(!root.querySelectorAll('input')){
+      root.append(input);
+    }
+    if(!root.querySelectorAll('.list.hidden')){
+      root.append(list);
+    }
   });
 }
 
