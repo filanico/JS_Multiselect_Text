@@ -1,6 +1,5 @@
-function Pills(cssSelector, config) {
-  this.rowIndex=1;
-  this.selection = [];
+function Pills(cssSelector, JSconfig={}) {
+  
   // utils
   this.hide = function (list) {
     list.classList.remove("show");
@@ -21,6 +20,23 @@ function Pills(cssSelector, config) {
     const ce = new CustomEvent(eventName,{detail:data});
     document.dispatchEvent(ce);
   }
+  this.setEntries = function (entries, list, input,root) {
+    list.innerHTML = "";
+    entries.forEach(
+      function (entry) {
+        const node = document.createElement("li");
+        node.addEventListener(
+          "click",
+          function () {
+            this.onItemClick(node, input, root);
+          }.bind(this)
+        );
+        node.innerText = entry;
+        list.append(node);
+      }.bind(this)
+    );
+  }.bind(this);
+  
   // events
   this.onItemClick = function (node, input, root) {
     const list = node.parentNode;
@@ -40,24 +56,12 @@ function Pills(cssSelector, config) {
     this.trigger('Pill_onListItemClick',{pill,root})
   }.bind(this);
 
-  this.setEntries = function (entries, list, input,root) {
-    list.innerHTML = "";
-    entries.forEach(
-      function (entry) {
-        const node = document.createElement("li");
-        node.addEventListener(
-          "click",
-          function () {
-            this.onItemClick(node, input, root);
-          }.bind(this)
-        );
-        node.innerText = entry;
-        list.append(node);
-      }.bind(this)
-    );
-  }.bind(this);
-  const entries = config.entries || [];
   [...document.querySelectorAll(cssSelector)].forEach((root) => {
+    const config = {
+      ...JSconfig,
+      ...JSON.parse(root.getAttribute('data-config'))
+    }
+    const entries = config.entries;
     const input = document.createElement("input");
     this.setAttributes(input, {
       type: 'text',

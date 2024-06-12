@@ -9,10 +9,7 @@
     <script src="./Pills.js"></script>
     <script>
       window.onload = () => {
-        Pills("[pills]", {
-          entries: ["ferro", "alluminio", "zinco", "rame", "titanio", "stagno"],
-          showResultsAfterMsecs: 400,
-        });
+        Pills("[pills]");
       };
       document.addEventListener('Pill_onSelectedItemClick',(e)=>{
         console.log('Pill_onSelectedItemClick',e);
@@ -21,6 +18,6 @@
     </script>
   </head>
   <body>
-    <div pills class="pills"></div>
+    <div pills class="pills" data-config='{"entries": ["ferro", "alluminio", "zinco", "rame", "titanio", "stagno"],"showResultsAfterMsecs": 400}'></div>
   </body>
 </html>
