@@ -32,7 +32,7 @@ function Pills(cssSelector, JSconfig={}) {
           }.bind(this)
         );
         node.innerText = entry;
-        this.trigger('Pill_onBeforeAppendListItem',{entry,node});
+        this.trigger('Pill_onBeforeAppendListItem',{entry,node,root});
         list.append(node);
       }.bind(this)
     );
