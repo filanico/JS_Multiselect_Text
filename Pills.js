@@ -51,7 +51,7 @@ function Pills(cssSelector, JSconfig={}) {
     pill.append(times);
     pill.classList.add("pill");
     pill.addEventListener('click',function(){
-      this.trigger('Pill_onSelectedItemClick',{pill,root})
+      this.trigger('Pill_onSelectedItemClick',{selectedItem:node, pill,root})
     }.bind(this))
     node.parentNode.parentNode.append(pill);
     this.trigger('Pill_onListItemClick',{pill,root})
