@@ -80,7 +80,7 @@ function Pills(cssSelector, JSconfig={}) {
             function () {
               this.trigger('Pill_onSearch',{root})
               this.setEntries(
-                entries.filter((entry) => entry.toLowerCase().includes(e.target.value.toLowerCase())),
+                entries.filter((entry) => entry.toLowerCase().startsWith(e.target.value.toLowerCase())),
                 list,
                 input,
                 root
