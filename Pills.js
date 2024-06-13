@@ -1,5 +1,4 @@
 function Pills(cssSelector, JSconfig={}) {
-  
   // utils
   this.hide = function (list) {
     list.classList.remove("show");
@@ -117,15 +116,18 @@ function Pills(cssSelector, JSconfig={}) {
         }
       }
     }.bind(this));
-    document.addEventListener('mouseup',function(e){
-      this.x = e.pageX;
-      this.y = e.pageY;
-      this.eClick=e;
-      if(e.target.tagName !== 'INPUT'){
-        this.hide(list);
-      }
-      // document.querySelector('#coords').textContent = JSON.stringify({x:this.x,y:this.y, oX: e.offsetX, oY: e.offsetY, cX: e.clientX, cY: e.clientY, lX: e.layerX, lY: e.layerY, target: e.target.tagName})
-    }.bind(this))
+    if(!Pills.isMouseUpListening){
+      document.addEventListener('mouseup',function(e){
+          this.x = e.pageX;
+          this.y = e.pageY;
+          this.eClick=e;
+          if(e.target.tagName !== 'INPUT'){
+            this.hide(list);
+          }
+          // document.querySelector('#coords').textContent = JSON.stringify({x:this.x,y:this.y, oX: e.offsetX, oY: e.offsetY, cX: e.clientX, cY: e.clientY, lX: e.layerX, lY: e.layerY, target: e.target.tagName})
+      }.bind(this))
+      Pills.isMouseUpListening = true;
+    }
     this.setAttributes(list, { class: "list hidden" });
     if(!root.querySelector('input')){
       root.append(input);
