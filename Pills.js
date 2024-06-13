@@ -68,6 +68,8 @@ function Pills(cssSelector, JSconfig={}) {
     const allowEmptySearch = config.allowEmptySearch || false;
     const showListOnFocus = entries.length<=showMaxResults;
     const input = document.createElement("input");
+    const list = document.createElement("ul");
+
     this.setAttributes(input, {
       type: 'text',
       // contenteditable:'plaintext-only',
@@ -105,7 +107,11 @@ function Pills(cssSelector, JSconfig={}) {
         input.dispatchEvent(ce);
       }
     });
-    const list = document.createElement("ul");
+    input.addEventListener("blur", function (e) {
+      if (showListOnFocus) {
+        this.hide(list);
+      }
+    }.bind(this));
     this.setAttributes(list, { class: "list hidden" });
     if(!root.querySelector('input')){
       root.append(input);
