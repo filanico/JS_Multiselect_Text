@@ -64,6 +64,9 @@ function Pills(cssSelector, JSconfig={}) {
       ...JSON.parse(root.getAttribute('data-config'))
     }
     const entries = config.entries;
+    const showMaxResults = config.showMaxResults || 10;
+    const allowEmptySearch = config.allowEmptySearch || false;
+    const showListOnFocus = entries.length<=showMaxResults;
     const input = document.createElement("input");
     this.setAttributes(input, {
       type: 'text',
@@ -76,7 +79,7 @@ function Pills(cssSelector, JSconfig={}) {
       function (e) {
         e.preventDefault();
         clearTimeout(timer);
-        if (e.target.value.trim() !== "") {
+        if (e.target.value.trim() !== "" || allowEmptySearch) {
           timer = setTimeout(
             function () {
               this.trigger('Pill_onSearch',{root})
@@ -96,6 +99,12 @@ function Pills(cssSelector, JSconfig={}) {
         }
       }.bind(this)
     );
+    input.addEventListener("focus", function (e) {
+      if (showListOnFocus) {
+        let ce = new CustomEvent("input", { value: "" });
+        input.dispatchEvent(ce);
+      }
+    });
     const list = document.createElement("ul");
     this.setAttributes(list, { class: "list hidden" });
     if(!root.querySelector('input')){
