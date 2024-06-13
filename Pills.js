@@ -66,7 +66,7 @@ function Pills(cssSelector, JSconfig={}) {
     const entries = config.entries;
     const showMaxResults = config.showMaxResults || 10;
     const allowEmptySearch = config.allowEmptySearch || false;
-    const showListOnFocus = entries.length<=showMaxResults;
+    const showListOnFocus = entries.length <= showMaxResults;
     const input = document.createElement("input");
     const list = document.createElement("ul");
 
@@ -109,9 +109,23 @@ function Pills(cssSelector, JSconfig={}) {
     });
     input.addEventListener("blur", function (e) {
       if (showListOnFocus) {
-        this.hide(list);
+        let box = list.getBoundingClientRect();
+        if(box.left<= x && x <=box.left+box.width && box.top<= box.top+y && box.top+y <=box.top+box.height){
+          // click on list: let it visible in order to pick list-item
+        } else {
+          this.hide(list);
+        }
       }
     }.bind(this));
+    document.addEventListener('mouseup',function(e){
+      this.x = e.pageX;
+      this.y = e.pageY;
+      this.eClick=e;
+      if(e.target.tagName !== 'INPUT'){
+        this.hide(list);
+      }
+      // document.querySelector('#coords').textContent = JSON.stringify({x:this.x,y:this.y, oX: e.offsetX, oY: e.offsetY, cX: e.clientX, cY: e.clientY, lX: e.layerX, lY: e.layerY, target: e.target.tagName})
+    }.bind(this))
     this.setAttributes(list, { class: "list hidden" });
     if(!root.querySelector('input')){
       root.append(input);
