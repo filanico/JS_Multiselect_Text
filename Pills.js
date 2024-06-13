@@ -121,7 +121,7 @@ function Pills(cssSelector, JSconfig={}) {
           this.x = e.pageX;
           this.y = e.pageY;
           this.eClick=e;
-          if(e.target.tagName !== 'INPUT'){
+          if(!(e.target.tagName === 'LI' && e.target.parentNode.parentNode.hasAttribute('pills'))){
             this.hide(list);
           }
           // document.querySelector('#coords').textContent = JSON.stringify({x:this.x,y:this.y, oX: e.offsetX, oY: e.offsetY, cX: e.clientX, cY: e.clientY, lX: e.layerX, lY: e.layerY, target: e.target.tagName})
