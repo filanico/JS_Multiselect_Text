@@ -109,16 +109,16 @@ function Pills(cssSelector, JSconfig={}) {
         input.dispatchEvent(ce);
       }
     });
-    input.addEventListener("blur", function (e) {
-      if (showListOnFocus) {
-        let box = list.getBoundingClientRect();
-        if(box.left<= x && x <=box.left+box.width && box.top<= box.top+y && box.top+y <=box.top+box.height){
-          // click on list: let it visible in order to pick list-item
-        } else {
-          this.hide(list);
-        }
-      }
-    }.bind(this));
+    // input.addEventListener("blur", function (e) {
+    //   if (showListOnFocus) {
+    //     let box = list.getBoundingClientRect();
+    //     if(box.left<= x && x <=box.left+box.width && box.top<= box.top+y && box.top+y <=box.top+box.height){
+    //       // click on list: let it visible in order to pick list-item
+    //     } else {
+    //       this.hide(list);
+    //     }
+    //   }
+    // }.bind(this));
     if(!Pills.isMouseUpListening){
       document.addEventListener('mouseup',function(e){
           this.x = e.pageX;
