@@ -1,4 +1,4 @@
-function Pills(cssSelector, JSconfig={}) {
+export function Pills(cssSelector, JSconfig={}) {
   // utils
   this.hide = function (list) {
     list.classList.remove("show");
@@ -19,44 +19,55 @@ function Pills(cssSelector, JSconfig={}) {
     const ce = new CustomEvent(eventName,{detail:data});
     document.dispatchEvent(ce);
   }
+  this.createEntryNode = function(root,input,text){
+    const node = document.createElement("li");
+    node.addEventListener(
+        "click",
+        function () {
+            this.onItemClick(node, input, root);
+        }.bind(this)
+    );
+    node.innerText = text;
+
+    return node;
+  };
   this.setEntries = function (entries, list, input,root) {
     list.innerHTML = "";
-    entries = ['chiudi',...entries]
+    if(entries.length > 0){
+        entries = ['chiudi',...entries]
+    }
     entries.forEach(
       function (entry) {
-        const node = document.createElement("li");
-        node.addEventListener(
-          "click",
-          function () {
-            this.onItemClick(node, input, root);
-          }.bind(this)
-        );
-        node.innerText = entry;
+        const node = this.createEntryNode(root, input, entry);
         this.trigger('Pill_onBeforeAppendListItem',{entry,node,root});
         list.append(node);
       }.bind(this)
     );
   }.bind(this);
-  
+
   // events
   this.onItemClick = function (node, input, root) {
     const list = node.parentNode;
     this.hide(list);
-    if(node.textContent!=='chiudi'){
+    if(node.textContent !== 'chiudi'){
       input.value = "";
       const pill = document.createElement("span");
       pill.innerText = node.textContent.trim();
+      pill.setAttribute('data-value',pill.innerText );
+
       const times = document.createElement('span');
       times.innerHTML = '&times;';
-      setAttributes(times,{class:'times'})
+      this.setAttributes(times,{class:'times'})
       pill.append(times);
       pill.classList.add("pill");
       pill.addEventListener('click',function(){
         this.trigger('Pill_onSelectedItemClick',{listItem:node, pill,root})
       }.bind(this))
       this.trigger('Pill_onBeforeAppendSelectedItem',{listItem:node, pill,root});
-      node.parentNode.parentNode.append(pill);
-      this.trigger('Pill_onListItemClick',{pill,root})
+      if( node && node.parentNode && node.parentNode.parentNode){
+          node.parentNode.parentNode.append(pill);
+          this.trigger('Pill_onListItemClick',{pill,root})
+      }
     }
   }.bind(this);
 
@@ -66,6 +77,7 @@ function Pills(cssSelector, JSconfig={}) {
       ...JSON.parse(root.getAttribute('data-config'))
     }
     const entries = config.entries;
+
     const showMaxResults = config.showMaxResults || 10;
     const allowEmptySearch = config.allowEmptySearch || false;
     const showListOnFocus = entries.length <= showMaxResults;
@@ -74,7 +86,6 @@ function Pills(cssSelector, JSconfig={}) {
 
     this.setAttributes(input, {
       type: 'text',
-      // contenteditable:'plaintext-only',
     });
     let timer = null;
     const showResultsAfterMsecs = config.showResultsAfterMsecs || 1000;
@@ -109,16 +120,6 @@ function Pills(cssSelector, JSconfig={}) {
         input.dispatchEvent(ce);
       }
     });
-    // input.addEventListener("blur", function (e) {
-    //   if (showListOnFocus) {
-    //     let box = list.getBoundingClientRect();
-    //     if(box.left<= x && x <=box.left+box.width && box.top<= box.top+y && box.top+y <=box.top+box.height){
-    //       // click on list: let it visible in order to pick list-item
-    //     } else {
-    //       this.hide(list);
-    //     }
-    //   }
-    // }.bind(this));
     if(!Pills.isMouseUpListening){
       document.addEventListener('mouseup',function(e){
           this.x = e.pageX;
@@ -127,7 +128,6 @@ function Pills(cssSelector, JSconfig={}) {
           if(!(e.target.tagName === 'LI' && e.target.parentNode.parentNode.hasAttribute('pills'))){
             this.hide(list);
           }
-          // document.querySelector('#coords').textContent = JSON.stringify({x:this.x,y:this.y, oX: e.offsetX, oY: e.offsetY, cX: e.clientX, cY: e.clientY, lX: e.layerX, lY: e.layerY, target: e.target.tagName})
       }.bind(this))
       Pills.isMouseUpListening = true;
     }
@@ -138,6 +138,23 @@ function Pills(cssSelector, JSconfig={}) {
     if(!root.querySelector('.list.hidden')){
       root.append(list);
     }
+
+    const value = config.value;
+    if(value && Array.isArray(value)){
+        console.log("!empty and is array")
+        entries.intersect(value).forEach(function(selectedEntry) {
+            this.setEntries(
+                [selectedEntry],
+                list,
+                input,
+                root
+            )
+            // this.show(list);
+            list.querySelector('li:nth-child(2)').click()
+
+        }.bind(this))
+    }
+    console.log({value});
+
   });
 }
-
